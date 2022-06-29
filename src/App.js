@@ -1,12 +1,12 @@
-import React, {useRef, useEffect} from "react";
+import React, {useRef, useEffect, forwardRef} from "react";
 import { gsap } from "gsap";
 import './App.css';
 
-const Box = ({children}) => {
+const Box = forwardRef(({children}, ref) => {
   return(
-    <div className="box">{children}</div>
+    <div className="box" ref={ref}>{children}</div>
   )
-}
+});
 
 const Container = ({children}) => {
   return(
@@ -15,24 +15,30 @@ const Container = ({children}) => {
 }
 
 function App() {
-  const boxes = useRef();
-  const q = gsap.utils.selector(boxes)
+  const box1 = useRef();
+  const box2 = useRef();
 
   useEffect(()=> {
-    gsap.to(q(".box"), {
-      x:100,
-      stagger:0.33,
-      repeat: -1, // 반복
-      repeatDelay: 1,
-      yoyo: true //나갔다가 다시 부드럽게 돌아옴
-    })
+    const boxes = [
+      box1.current,
+      box2.current
+    ];
+
+  // Target the two specific elements we have forwarded refs to
+  gsap.to(boxes, {
+    x: 100,
+    repeat: -1,
+    repeatDelay: 1,
+    yoyo: true
   });
 
+  },[]);
+
   return (
-    <div className="app" ref={boxes}>
-    <Box>Box</Box>
+    <div className="app">
+    <Box ref={box1}>Box</Box>
     <Container/>
-    <Box>Box2</Box>
+    <Box ref={box2}>Box2</Box>
    </div>
   );
 }
