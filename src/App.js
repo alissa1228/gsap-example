@@ -1,32 +1,24 @@
-import React, {useRef, useEffect, useState} from "react";
+import React from "react";
 import { gsap } from "gsap";
 import './App.css';
 
-
-const randomX = gsap.utils.random(-200, 200, 1, true);
-//랜덤 숫자 받아서 Gsap x 쪽에 해당 값 넣기 -> 값 만큼 x 값 이동.
-const Box = ({ children, endX })=>  {    
-  const boxRef = useRef();
-
-  // run when `endX` changes
-  useEffect(() => {
-    gsap.to(boxRef.current, {
-      x: endX
-    });
-  }, [endX]);
-  
-  return <div className="box purple" ref={boxRef}>{children}</div>;
-}
-
 function App() {
-  //랜덤 숫자 넣기.
-  const [endX, setEndX] = useState(0);
+  const onEnter = ({ currentTarget }) => {
+    console.log(currentTarget);
+    gsap.to(currentTarget, { backgroundColor: "#e77614", scale: 1.2 });
+  };
+  
+  const onLeave = ({ currentTarget }) => {
+    console.log(currentTarget);
+    gsap.to(currentTarget, { backgroundColor: "#28a92b", scale: 1 });
+  };
 
   return (
-    <div className="app">
-      <button className="toggle" onClick={() => setEndX(randomX())}>Pass in a randomized value</button>
-      <Box endX={endX}>{endX}</Box>
+    <div className="app flex-row">
+    <div className="box purple" onMouseEnter={onEnter} onMouseLeave={onLeave}>
+      Hover Me
     </div>
+  </div>
   );
 }
 
